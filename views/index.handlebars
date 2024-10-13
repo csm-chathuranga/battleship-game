@@ -1,0 +1,62 @@
+<h1>Welcome to Battleship Game</h1>
+<button id="start-game">Start New Game</button>
+<div id="grid" class="grid"></div>
+<h2 id="status">Game Status: Not Started</h2>
+
+<style>
+    .grid { display: grid; grid-template-columns: repeat(10, 40px); gap: 5px; }
+    .cell { width: 40px; height: 40px; border: 1px solid #333; text-align: center; line-height: 40px; cursor: pointer; }
+    .hit { background-color: red; }
+    .miss { background-color: lightgrey; }
+</style>
+
+<script>
+    const gridContainer = document.getElementById('grid');
+    let gameId;
+
+    document.getElementById('start-game').addEventListener('click', async () => {
+        const response = await fetch('/api/start-game', { method: 'POST' });
+        const data = await response.json();
+        gameId = data.gameId;
+        document.getElementById('status').textContent = "Game Status: Game Started!";
+        createGrid();
+    });
+
+    function createGrid() {
+        gridContainer.innerHTML = '';
+        for (let y = 0; y < 10; y++) {
+            for (let x = 0; x < 10; x++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.dataset.coordinate = `${String.fromCharCode(65 + x)}${y + 1}`;
+                cell.addEventListener('click', fireShot);
+                gridContainer.appendChild(cell);
+            }
+        }
+    }
+
+    async function fireShot(event) {
+        if (!gameId) return alert("Start a new game first!");
+        const coordinate = event.target.dataset.coordinate;
+        const response = await fetch('/api/fire', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ gameId, coordinate })
+        });
+        const result = await response.json();
+
+        if (result.result === 'Hit') {
+            event.target.classList.add('hit');
+            event.target.textContent = 'H';
+        } else if (result.result === 'Sunk') {
+            event.target.classList.add('hit');
+            event.target.textContent = 'S';
+        } else {
+            event.target.classList.add('miss');
+            event.target.textContent = 'M';
+        }
+
+        document.getElementById('status').textContent = `Last Shot: ${coordinate} - ${result.result}`;
+        event.target.removeEventListener('click', fireShot);
+    }
+</script>
