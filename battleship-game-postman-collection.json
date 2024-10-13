@@ -1,0 +1,93 @@
+{
+    "info": {
+        "name": "Battleship Game API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Start New Game",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "http://localhost:3000/api/start-game",
+                    "protocol": "http",
+                    "host": [
+                        "localhost:3000"
+                    ],
+                    "path": [
+                        "api",
+                        "start-game"
+                    ]
+                },
+                "description": "Starts a new game and places ships on the board."
+            },
+            "response": []
+        },
+        {
+            "name": "Fire Shot",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"gameId\": 1, \"coordinate\": \"A5\"}"
+                },
+                "url": {
+                    "raw": "http://localhost:3000/api/fire",
+                    "protocol": "http",
+                    "host": [
+                        "localhost:3000"
+                    ],
+                    "path": [
+                        "api",
+                        "fire"
+                    ]
+                },
+                "description": "Fires a shot at the specified coordinate."
+            },
+            "response": []
+        },
+        {
+            "name": "Get Game Status",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "http://localhost:3000/api/status?gameId=1",
+                    "protocol": "http",
+                    "host": [
+                        "localhost:3000"
+                    ],
+                    "path": [
+                        "api",
+                        "status"
+                    ],
+                    "query": [
+                        {
+                            "key": "gameId",
+                            "value": "1"
+                        }
+                    ]
+                },
+                "description": "Retrieves the current status of the game, including remaining ships."
+            },
+            "response": []
+        }
+    ]
+}
